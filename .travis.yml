@@ -1,0 +1,32 @@
+# https://docs.travis-ci.com/user/docker/
+# https://docs.travis-ci.com/user/environment-variables/
+# https://docs.travis-ci.com/user/job-lifecycle/
+# https://docs.travis-ci.com/user/deployment/custom/
+
+# You can import up to 25 other configs in total.
+os: linux
+
+language: node_js
+
+node_js:
+  - 10
+
+cache:
+  - npm
+
+scripts:
+  - pip install coveralls
+  - pipenv install coverage==5.0.1
+  - pipenv install pytest-cov
+  - pipenv install coveralls==1.10.0
+
+  - coverage erase
+  - coverage run -m pytest tests/test.py
+  - COVERALLS_REPO_TOKEN=$COVERALLS_API_KEY coveralls
+
+
+import:
+  - credentials.yml
+  - .travis-merger.yml
+  - .travis-stages.yml
+  - .coveralls.yml
